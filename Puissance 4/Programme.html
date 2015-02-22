@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+		<link rel="stylesheet" href="structure.css" />
+        <title>Puissance 4</title>
+    </head>
+
+    <body>
+		<p id="Titre">Puissance 4</p>
+		<p id="C0">Lacher jeton</p>
+		<p id="C1">Lacher jeton</p>
+		<p id="C2">Lacher jeton</p>
+		<p id="C3">Lacher jeton</p>
+		<p id="C4">Lacher jeton</p>
+		<p id="C5">Lacher jeton</p>
+		<p id="C6">Lacher jeton</p>
+		
+		<canvas id="canvas" width="500" height="400">
+		<p>Désolé, votre navigateur ne supporte pas Canvas. Mettez-vous à jour</p>
+		</canvas>
+		<p id="AquiLeTourdeJouer">Les jaunes commencent !</p>
+		<script>
+		var canvas  = document.querySelector('#canvas');
+		var context = canvas.getContext('2d');
+		
+		var taille_cellule = 60 ; // taille de la cellule de base
+		var epaisseur_traits = taille_cellule / 6 ; //épaisseur des traits de construction
+		var XorigGrille = 30 ; // abcisse origine grille de jeu
+		var YorigGrille = 30 ; // ordonnée origine grille de jeu
+		var TourDeJouer; // objet affichant à qui c'est le tour
+		
+		// on dessine la grille de jeu
+		context.strokeStyle = "RGB(0,0,255)"; // bleu 
+		context.lineWidth = epaisseur_traits;
+				
+		for (var j = 0 ; j <= 6 ; j++) { // 7 rectangles horizontaux empilés 
+		context.strokeRect(XorigGrille + j * taille_cellule,YorigGrille, taille_cellule,6 * taille_cellule);
+		}
+
+		for (var k = 1 ; k <= 4 ; k++) { // 4 rectangles verticaux
+		context.strokeRect(XorigGrille,YorigGrille + taille_cellule * k, 7 * taille_cellule,taille_cellule);
+		}
+ 		
+		for (var ColonneGrille = 0 ; ColonneGrille <=6 ; ColonneGrille ++) {
+		for (var LigneGrille = 0 ; LigneGrille <=5 ; LigneGrille ++) {
+			
+			context.beginPath(); //cercle bleu entourant le jeton
+			context.arc(XorigGrille + taille_cellule / 2 + taille_cellule * ColonneGrille,YorigGrille + taille_cellule / 2 + taille_cellule * LigneGrille,taille_cellule / 2, 0, Math.PI*2);
+			context.stroke();
+		}
+		}
+
+		var CouleurQuiJoue = 'jaune'; //ce sont les jaunes qui commencent par défaut
+		
+		var cases = new Array(); // on crée l'array cases qui est la liste numérotées des cases (0 sera en haut à gauche et 41 sera en bas à droite) 
+		for (var i = 0 ; i <= 41 ; i++) { // on initialise l'array avec toutes les cases en blanc
+			cases[i]='fond';
+		}
+		
+		ActualisationGrille();
+		
+
+		var LacherJetonCol0 = document.getElementById('C0');
+		var LacherJetonCol1 = document.getElementById('C1');
+		var LacherJetonCol2 = document.getElementById('C2');
+		var LacherJetonCol3 = document.getElementById('C3');
+		var LacherJetonCol4 = document.getElementById('C4');
+		var LacherJetonCol5 = document.getElementById('C5');
+		var LacherJetonCol6 = document.getElementById('C6');
+		
+		var ClicSurC0 = function() {
+		TourDejeu(0);
+		}
+		var ClicSurC1 = function() {
+		TourDejeu(1);
+		}
+		var ClicSurC2 = function() {
+		TourDejeu(2);
+		}
+		var ClicSurC3 = function() {
+		TourDejeu(3);
+		}
+		var ClicSurC4 = function() {
+		TourDejeu(4);
+		}
+		var ClicSurC5 = function() {
+		TourDejeu(5);
+		}
+		var ClicSurC6 = function() {
+		TourDejeu(6);
+		}
+		
+		LacherJetonCol0.addEventListener('click', ClicSurC0, false);
+		LacherJetonCol1.addEventListener('click', ClicSurC1, false);
+		LacherJetonCol2.addEventListener('click', ClicSurC2, false);
+		LacherJetonCol3.addEventListener('click', ClicSurC3, false);
+		LacherJetonCol4.addEventListener('click', ClicSurC4, false);
+		LacherJetonCol5.addEventListener('click', ClicSurC5, false);
+		LacherJetonCol6.addEventListener('click', ClicSurC6, false);
+		
+		
+		function TourDejeu(Colonne) {
+		var JetonNestPasArriver = true;
+		var OrdonneeJeton = 0; 
+		var CaseOccupeParJeton;
+		var TempsPasse;
+			
+		
+		while (JetonNestPasArriver) {
+		CaseOccupeParJeton = Colonne + OrdonneeJeton * 7;
+		cases[CaseOccupeParJeton]=CouleurQuiJoue;
+		if (OrdonneeJeton != 0) {// on dessine la case au dessus de la couleur du fond si le jeton n'est pas en première ligne
+			cases[CaseOccupeParJeton - 7] = 'fond';
+		 }
+		
+		//setTimeout("ActualisationGrille()",1000); 
+
+		
+		for (TempsPasse = 0 ; TempsPasse < 10000 ; TempsPasse++);
+		
+		ActualisationGrille();
+		
+		
+		if (CaseOccupeParJeton <=41) { // on ne continue que si le jeton n'est pas en bas de la grille 
+				//alert (CaseOccupeParJeton);
+				if (cases[CaseOccupeParJeton + 7] == 'fond') { //on ne va continuer une boucle de plus que le jeton a une case de couleur fond en dessous 
+				OrdonneeJeton = OrdonneeJeton + 1;
+				}
+				else {
+					JetonNestPasArriver = false;
+					if (OrdonneeJeton == 0) {
+						switch (Colonne) {
+							case 0:
+								LacherJetonCol0.removeEventListener('click', ClicSurC0, false);
+								document.getElementById('C0').style.backgroundColor = "RGB(100,100,100)";
+								document.getElementById('C0').style.color = "RGB(200,200,200)";
+							break;
+							case 1:
+								LacherJetonCol1.removeEventListener('click', ClicSurC1, false);
+								document.getElementById('C1').style.backgroundColor = "RGB(100,100,100)";
+								document.getElementById('C1').style.color = "RGB(200,200,200)";
+							break;
+							case 2:
+								LacherJetonCol2.removeEventListener('click', ClicSurC2, false);
+								document.getElementById('C2').style.backgroundColor = "RGB(100,100,100)";
+								document.getElementById('C2').style.color = "RGB(200,200,200)";
+							break;
+							case 3:
+								LacherJetonCol3.removeEventListener('click', ClicSurC3, false);
+								document.getElementById('C3').style.backgroundColor = "RGB(100,100,100)";
+								document.getElementById('C3').style.color = "RGB(200,200,200)";
+							break;
+							case 4:
+								LacherJetonCol4.removeEventListener('click', ClicSurC4, false);
+								document.getElementById('C4').style.backgroundColor = "RGB(100,100,100)";
+								document.getElementById('C4').style.color = "RGB(200,200,200)";
+							break;
+							case 5:
+								LacherJetonCol5.removeEventListener('click', ClicSurC5, false);
+								document.getElementById('C5').style.backgroundColor = "RGB(100,100,100)";
+								document.getElementById('C5').style.color = "RGB(200,200,200)";
+							break;
+							case 6:
+								LacherJetonCol6.removeEventListener('click', ClicSurC6, false);
+								document.getElementById('C6').style.backgroundColor = "RGB(100,100,100)";
+								document.getElementById('C6').style.color = "RGB(200,200,200)";
+							break;
+						}
+					} //fin if
+				}
+		} //fin du if
+		else {
+		JetonNestPasArriver = false;
+		}
+		
+		} //fin de while
+		
+		switch (CouleurQuiJoue) {
+			case 'jaune':
+				CouleurQuiJoue = 'rouge';
+				document.getElementById('AquiLeTourdeJouer').innerHTML = 'Les jaunes ont joué, ça va être aux rouges de jouer !!'
+				document.getElementById('AquiLeTourdeJouer').style.color = "RGB(255,0,0)";
+				break;
+			case 'rouge':
+				CouleurQuiJoue = 'jaune';
+				document.getElementById('AquiLeTourdeJouer').innerHTML = 'Les rouges ont joué, ça va être aux jaunes de jouer !!'; 
+				document.getElementById('AquiLeTourdeJouer').style.color = "RGB(255,255,0)";
+				break;
+		
+		
+		}
+		
+		} // fin de TourDeJeu
+		
+			
+		
+		function ActualisationGrille() {
+		var couleur;
+		var couleur_case;
+		var x,y;  //coordonnées du centre de la case en cours		
+		var i = 0; //compteur balayant toutes les cases de 0 à 41
+		var NumeroCol = 0;
+		var NumeroLign = 0;
+		
+		while (NumeroLign <= 5) {
+			
+			while (NumeroCol <= 6) {
+			x = XorigGrille + taille_cellule/2 + taille_cellule * NumeroCol;
+			y = YorigGrille + taille_cellule/2 + taille_cellule * NumeroLign;
+			
+			couleur_case = cases[i];
+			//alert (cases[i]);
+			//alert (couleur_case);
+			switch (couleur_case) {
+				case 'fond': 
+					couleur = "#FFFFFF";
+					break;
+					
+				case 'jaune': 
+					couleur = "#FFFF00";
+					break ; 
+					
+				case 'rouge':
+					couleur = "#FF0000" ; 
+					break	
+			}
+			
+			context.beginPath(); 
+			context.fillStyle = couleur;
+			context.arc(x,y,taille_cellule / 2 - epaisseur_traits / 2, 0, Math.PI*2);
+			context.fill();			
+			i = i + 1;
+			NumeroCol = NumeroCol + 1;
+			}
+		NumeroLign = NumeroLign + 1;	
+		NumeroCol = 0;
+		}	
+		
+
+		
+		} // fin de ActualisationGrille	
+		
+		
+		</script>
+		
+	</body>
+</html>

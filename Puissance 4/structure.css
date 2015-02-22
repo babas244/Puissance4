@@ -1,0 +1,115 @@
+#Titre
+{
+	position: absolute;
+	font-size: 30px;
+	left: 160px;
+	top: 0px;	
+}
+
+canvas
+{
+	position: absolute;
+	left: 60px;
+	top: 120px;
+	/*background-color: grey; */
+}	
+
+	
+#C0
+{
+	width: 58px;
+	position:absolute;
+	left: 90px;
+	top: 60px;
+	overflow: hidden;
+	background-color: rgb(255,0,0);
+	color: rgb(255,255,0);
+	text-align: center;
+}
+
+#C1
+{
+	width: 58px;
+	position:absolute;
+	left: 150px;
+	top: 60px;
+	overflow: hidden;
+	background-color: rgb(255,0,0);
+	color: rgb(255,255,0);
+	text-align: center;
+}
+
+
+#C2
+{
+	width: 58px;
+	position:absolute;
+	left: 210px;
+	top: 60px;
+	overflow: hidden;
+	background-color: rgb(255,0,0);
+	color: rgb(255,255,0);
+	text-align: center;
+}
+
+
+#C3
+{
+	width: 58px;
+	position:absolute;
+	left: 270px;
+	top: 60px;
+	overflow: hidden;
+	background-color: rgb(255,0,0);
+	color: rgb(255,255,0);
+	text-align: center;
+}
+
+#C4
+{
+	width: 58px;
+	position:absolute;
+	left: 330px;
+	top: 60px;
+	overflow: hidden;
+	background-color: rgb(255,0,0);
+	color: rgb(255,255,0);
+	text-align: center;
+}
+
+#C5
+{
+	width: 58px;
+	position:absolute;
+	left: 390px;
+	top: 60px;
+	overflow: hidden;
+	background-color: rgb(255,0,0);
+	color: rgb(255,255,0);
+	text-align: center;
+}
+
+#C6
+{
+	width: 58px;
+	position:absolute;
+	left: 450px;
+	top: 60px;
+	overflow: hidden;
+	background-color: rgb(255,0,0);
+	color: rgb(255,255,0);
+	text-align: center;
+}
+
+
+
+#AquiLeTourdeJouer
+{
+	/*text-decoration: blink;*/
+	color: rgb(225,255,0);
+	background-color: rgb(150,150,150);
+	position: absolute;
+	font-size: 20px;
+	left: 90px;
+	top: 530px;
+}	
