@@ -13,95 +13,18 @@ canvas
 	top: 120px;
 	/*background-color: grey; */
 }	
-
 	
-#C0
+.drop
 {
-	width: 58px;
-	position:absolute;
-	left: 90px;
+	width: 100px;
+	margin-top: 60px;	
 	top: 60px;
+	height: 60px;
 	overflow: hidden;
 	background-color: rgb(255,0,0);
 	color: rgb(255,255,0);
 	text-align: center;
 }
-
-#C1
-{
-	width: 58px;
-	position:absolute;
-	left: 150px;
-	top: 60px;
-	overflow: hidden;
-	background-color: rgb(255,0,0);
-	color: rgb(255,255,0);
-	text-align: center;
-}
-
-
-#C2
-{
-	width: 58px;
-	position:absolute;
-	left: 210px;
-	top: 60px;
-	overflow: hidden;
-	background-color: rgb(255,0,0);
-	color: rgb(255,255,0);
-	text-align: center;
-}
-
-
-#C3
-{
-	width: 58px;
-	position:absolute;
-	left: 270px;
-	top: 60px;
-	overflow: hidden;
-	background-color: rgb(255,0,0);
-	color: rgb(255,255,0);
-	text-align: center;
-}
-
-#C4
-{
-	width: 58px;
-	position:absolute;
-	left: 330px;
-	top: 60px;
-	overflow: hidden;
-	background-color: rgb(255,0,0);
-	color: rgb(255,255,0);
-	text-align: center;
-}
-
-#C5
-{
-	width: 58px;
-	position:absolute;
-	left: 390px;
-	top: 60px;
-	overflow: hidden;
-	background-color: rgb(255,0,0);
-	color: rgb(255,255,0);
-	text-align: center;
-}
-
-#C6
-{
-	width: 58px;
-	position:absolute;
-	left: 450px;
-	top: 60px;
-	overflow: hidden;
-	background-color: rgb(255,0,0);
-	color: rgb(255,255,0);
-	text-align: center;
-}
-
-
 
 #AquiLeTourdeJouer
 {
