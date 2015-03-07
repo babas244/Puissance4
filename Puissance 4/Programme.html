@@ -19,7 +19,7 @@
 			btn.id = 'C' + i;
 			btn.style.left = buttonShift + 'px';
 		    btn.value = "Lacher jeton";
-		    btn.onclick = (function(i) { return function() { TourDejeu(i); }; })(i);
+		    btn.onclick = (function(i) { return function() { Tour(i); }; })(i);
 		    buttonShift += 60;
 			document.body.appendChild(btn); //Adding node to the body
 		}
@@ -32,120 +32,93 @@
 		<p id="AquiLeTourdeJouer">Les jaunes commencent !</p>
 		<script>
 
-			/* Voici le debut d'une possiblite de structurer le code dans un objet
+		var canvas  = document.querySelector('#canvas');
+		var context = canvas.getContext('2d');
+		var taille_cellule = 60 ; // taille de la cellule de base
+		var epaisseur_traits = taille_cellule / 6 ; //épaisseur des traits de construction
+		var XorigGrille = 30 ; // abcisse origine grille de jeu
+		var YorigGrille = 30 ; // ordonnée origine grille de jeu
+		var TourDeJouer; // objet affichant à qui c'est le tour
+		
+		var colorWhite = "#FFFFFF"; //fond
+		var colorYellow = "#FFFF00";
+		var colorRed = "#FF0000";
+		var CouleurQuiJoue = colorYellow; //ce sont les jaunes qui commencent par défaut
 
-		var puissanceQuatre = {
-			canvas: null,
-			context: null,
-			taille_cellule: 60,
-			epaisseur_traits: this.taille_cellule / 6,
-			XorigGrille: 30,
-			YorigGrille: 30, 
-			TourDeJouer: '',
-			CouleurQuiJoue: "jaune",
-			initialize = function(){
-				var canv  = document.querySelector('#canvas');
-				var contxt = canv.getContext('2d');
-				contxt.strokeStyle = "RGB(0,0,255)"; // bleu 
-				contxt.lineWidth = this.epaisseur_traits;
-
-				this.canvas = canv;
-				this.context = contxt;
-			};
-		};
-
-*/
-			var canvas  = document.querySelector('#canvas');
-			var context = canvas.getContext('2d');
-			var taille_cellule = 60 ; // taille de la cellule de base
-			var epaisseur_traits = taille_cellule / 6 ; //épaisseur des traits de construction
-			var XorigGrille = 30 ; // abcisse origine grille de jeu
-			var YorigGrille = 30 ; // ordonnée origine grille de jeu
-			var TourDeJouer; // objet affichant à qui c'est le tour
-			var CouleurQuiJoue = 'jaune'; //ce sont les jaunes qui commencent par défaut
-
-			// on dessine la grille de jeu
-			context.strokeStyle = "RGB(0,0,255)"; // bleu 
-			context.lineWidth = epaisseur_traits;
+		// on dessine la grille de jeu
+		context.strokeStyle = "RGB(0,0,255)"; // bleu 
 				
-		for (var j = 0 ; j <= 6 ; j++) { // 7 rectangles horizontaux empilés 
-			context.strokeRect(XorigGrille + j * taille_cellule,YorigGrille, taille_cellule,6 * taille_cellule);
-		}
 
-		for (var k = 1 ; k <= 4 ; k++) { // 4 rectangles verticaux
-			context.strokeRect(XorigGrille,YorigGrille + taille_cellule * k, 7 * taille_cellule,taille_cellule);
-		}
- 		
-		for (var ColonneGrille = 0 ; ColonneGrille <=6 ; ColonneGrille ++) {
-			for (var LigneGrille = 0 ; LigneGrille <=5 ; LigneGrille ++) {
+		context.fillStyle = "RGB(0,0,255)";
+		context.fillRect(0, 0, 600, 500);
+		
+		var coords = [];
+
+		context.fillStyle = colorWhite;
+
+		for (var ColonneGrille = 0 ; ColonneGrille <= 6 ; ColonneGrille++) {
+			for (var LigneGrille = 0 ; LigneGrille <= 5 ; LigneGrille++) {
 			
 				context.beginPath(); //cercle bleu entourant le jeton
-				context.arc(XorigGrille + taille_cellule / 2 + taille_cellule * ColonneGrille,YorigGrille + taille_cellule / 2 + taille_cellule * LigneGrille,taille_cellule / 2, 0, Math.PI*2);
-				context.stroke();
+
+				var x = XorigGrille + taille_cellule / 2 + taille_cellule * ColonneGrille;
+				var y = YorigGrille + taille_cellule / 2 + taille_cellule * LigneGrille;
+
+				coords.push( [x, y, colorWhite] );
+				context.arc(x, y, 30, 0, Math.PI*2);//Faire les calculs avant l'appel de la fonction.
+				context.fill();						//Cela permet d'avoir une signature de fonction plus lisible.
 			}	
 		}
+		
+		function Tour(Colonne){
+			/*
+			0 = 60
+			1 = 120
+			2 = 180
+			3 = 240
+			4 = 300
+			5 = 360
+			6 = 420
+			*/
 
-		
-		var cases = new Array(); // on crée l'array cases qui est la liste numérotées des cases (0 sera en haut à gauche et 41 sera en bas à droite) 
-		for (var i = 0 ; i <= 41 ; i++) { // on initialise l'array avec toutes les cases en blanc
-			cases[i]='fond';
-		}
-		
-		ActualisationGrille();
-	
-		
-		function TourDejeu(Colonne) {
-			var JetonNestPasArriver = true;
-			var OrdonneeJeton = 0; 
-			var CaseOccupeParJeton;
-			var TempsPasse;
-			
-		
-			while (JetonNestPasArriver) {
-				CaseOccupeParJeton = Colonne + OrdonneeJeton * 7;
-				cases[CaseOccupeParJeton]=CouleurQuiJoue;
-				if (OrdonneeJeton != 0) {// on dessine la case au dessus de la couleur du fond si le jeton n'est pas en première ligne
-					cases[CaseOccupeParJeton - 7] = 'fond';
-			 	}
-			
-				//setTimeout(ActualisationGrille, 1000);
-			
-				ActualisationGrille();
-			
-			
-				if (CaseOccupeParJeton <=41) { // on ne continue que si le jeton n'est pas en bas de la grille 
-					//alert (CaseOccupeParJeton);
-					if (cases[CaseOccupeParJeton + 7] == 'fond') { //on ne va continuer une boucle de plus que le jeton a une case de couleur fond en 		dessous 
-						OrdonneeJeton = OrdonneeJeton + 1;
-					}
-					else {
-						JetonNestPasArriver = false;
-						if(OrdonneeJeton == 0) {
-							DesactiverCol(Colonne);
-						} //fin if
-					}
-				} //fin du if
-				else {
-					JetonNestPasArriver = false;
+			var cols = {};
+			j = 60;
+			for(var i = 0; i < 7; i++){
+				cols[i] = j;
+				j += 60;
+			}
+
+			var x = cols[Colonne];
+			var found = false;
+			var c = coords.length - 1;
+
+			while(found == false){
+				var item = coords[c];
+				if(item[0] == x && item[2] == colorWhite){
+					var y = item[1];
+					Paint(x, y, CouleurQuiJoue);
+					coords[c] = [x, y, CouleurQuiJoue];//updating coords
+					found = true;
 				}
-			} //fin de while
-			
+				c--;
+			}
+
 			switch (CouleurQuiJoue) {
-				case 'jaune':
-					CouleurQuiJoue = 'rouge';
+				case colorYellow:
+					CouleurQuiJoue = colorRed;
 					document.getElementById('AquiLeTourdeJouer').innerHTML = 'Les jaunes ont joué, ça va être aux rouges de jouer !!'
 					document.getElementById('AquiLeTourdeJouer').style.color = "RGB(255,0,0)";
 					break;
-				case 'rouge':
-					CouleurQuiJoue = 'jaune';
+				case colorRed:
+					CouleurQuiJoue = colorYellow;
 					document.getElementById('AquiLeTourdeJouer').innerHTML = 'Les rouges ont joué, ça va être aux jaunes de jouer !!'; 
 					document.getElementById('AquiLeTourdeJouer').style.color = "RGB(255,255,0)";
 					break;
 			
 			}
-			
-		} // fin de TourDeJeu
+		}
 		
+		//Function non utilise dans ma version du code actuelle
 		function DesactiverCol(Colonne){
 			var col = document.getElementById('C' + Colonne);
 
@@ -154,50 +127,14 @@
 			col.style.color = "RGB(200,200,200)";
 		}
 		
-		function ActualisationGrille() {
-			var couleur;
-			var couleur_case;
-			var x,y;  //coordonnées du centre de la case en cours		
-			var i = 0, //compteur balayant toutes les cases de 0 à 41
-			NumeroCol = 0
-			NumeroLign = 0;
-		
-			while (NumeroLign <= 5) {		
-				while (NumeroCol <= 6) {
-					x = XorigGrille + taille_cellule/2 + taille_cellule * NumeroCol;
-					y = YorigGrille + taille_cellule/2 + taille_cellule * NumeroLign;
-					
-					couleur_case = cases[i];
-					//alert (cases[i]);
-					//alert (couleur_case);
-					switch (couleur_case) {
-						case 'fond': 
-							couleur = "#FFFFFF";
-							break;
-							
-						case 'jaune': 
-							couleur = "#FFFF00";
-							break ; 
-							
-						case 'rouge':
-							couleur = "#FF0000" ; 
-							break	
-					}
-					
-					context.beginPath(); 
-					context.fillStyle = couleur;
-					context.arc(x,y,taille_cellule / 2 - epaisseur_traits / 2, 0, Math.PI*2);
-					context.fill();			
-					i = i + 1;
-					NumeroCol = NumeroCol + 1;
-				}
-				NumeroLign = NumeroLign + 1;	
-				NumeroCol = 0;
-			}	
-		} // fin de ActualisationGrille	
-		
-		
-		</script>
-		
+		//L'avantage de cette fonction est que tu repeins une seule case, et non l'integralite du tableau de jeu.
+		//Des gains de performances (pas forcement important dans ce cas pratique ci, mais certainement dans le futur vu l'ampleur des projets auquels tu t'attaques).
+		function Paint(x, y, fillStyle){
+			context.beginPath(); 
+			context.fillStyle = fillStyle;
+			context.arc(x, y, taille_cellule / 2 - epaisseur_traits / 2, 0, Math.PI * 2);
+			context.fill();	
+		}		
+		</script>		
 	</body>
 </html>
